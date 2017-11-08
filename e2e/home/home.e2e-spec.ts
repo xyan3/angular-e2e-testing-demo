@@ -1,5 +1,15 @@
 import { AngularE2eTestingPage } from './home.po';
-import { browser } from 'protractor';
+import { browser, protractor } from 'protractor';
+
+// For debug only: slow down e2e test and check the process
+const origFn = browser.driver.controlFlow().execute;
+browser.driver.controlFlow().execute = function () {
+  const args = arguments;
+  origFn.call(browser.driver.controlFlow(), function () {
+    return protractor.promise.delayed(50);
+  });
+  return origFn.apply(browser.driver.controlFlow(), args);
+};
 
 describe('angular-e2e-testing App', () => {
   let page: AngularE2eTestingPage;
